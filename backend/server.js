@@ -10,6 +10,8 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5001;
+// eslint-disable-next-line no-unused-vars
+const API_URL = import.meta.env.VITE_API_URL || 'https://pindropsilence.in';
 
 // CORS configuration
 const corsOptions = {
@@ -187,7 +189,6 @@ app.delete('/api/posts/:id', verifyToken, async (req, res) => {
 });
 
 // Listen to server
-app.listen(PORT, () => {
-  console.log(`Server is running on port: ${PORT}`);
-  console.log(`Full server address: http://localhost:${PORT}`);
+app.listen(process.env.PORT || PORT, () => {
+  console.log(`Server is running on port: ${process.env.PORT || PORT}`);
 });
