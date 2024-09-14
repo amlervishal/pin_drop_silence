@@ -1,58 +1,36 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { login } from '../services/api';
+import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 
-// eslint-disable-next-line react/prop-types
-const SignIn = ({ onSignIn }) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+const SignIn = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const auth = getAuth();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleGoogleSignIn = async () => {
+    const provider = new GoogleAuthProvider();
     try {
-      const { token } = await login(username, password);
-      onSignIn(username, token);
+      await signInWithPopup(auth, provider);
+      // Successful sign-in
       navigate('/');
-    } catch (err) {
-      setError('Invalid credentials');
-      console.error('Login error:', err);
+    } catch (error) {
+      console.error('Google sign-in error:', error);
+      setError(error.message);
     }
   };
 
   return (
     <div className="container mx-auto px-4 max-w-md">
-      <h1 className="font-Primary text-3xl font-normal tracking-widest text-center mb-4">Sign In</h1>
+      <h1 className="font-Primary text-3xl font-normal tracking-widest text-center mb-4">Sign in</h1>
       {error && <p className="text-red-500 mb-4">{error}</p>}
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label htmlFor="username" className="block mb-1">Username</label>
-          <input
-            type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className="w-full p-2 border rounded"
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="password" className="block mb-1">Password</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-2 border rounded"
-            required
-          />
-        </div>
-        <button type="submit" className="w-full bg-rose-600 text-white px-4 py-2 rounded">
-          Sign In
-        </button>
-      </form>
+      <button 
+        onClick={handleGoogleSignIn} 
+        className="w-full bg-white/50 text-white px-4 py-2 rounded-full border border-slate-600 flex items-center justify-center"
+      >
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo" className="mr-4 max-w-8 bg-white/0" />
+        <p className='text-slate-600'>Sign in with Google</p>
+      </button>
     </div>
   );
 };

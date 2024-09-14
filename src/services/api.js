@@ -1,49 +1,39 @@
-import axios from 'axios';
+import { collection, getDocs, addDoc, doc, getDoc, updateDoc, deleteDoc, query, orderBy } from 'firebase/firestore';
+import { db } from "../firebase.js"; // Import the pre-initialized Firestore instance
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
 
-const api = axios.create({
-  baseURL: API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
 
-// Add this function
-export const setAuthToken = (token) => {
-  if (token) {
-    api.defaults.headers.common['x-auth-token'] = token;
-  } else {
-    delete api.defaults.headers.common['x-auth-token'];
-  }
-};
-
-export const login = async (username, password) => {
-  const response = await api.post('/login', { username, password });
-  return response.data;
-};
 
 export const getPosts = async () => {
-  const response = await api.get('/posts');
-  return response.data;
+  const postsCol = collection(db, 'posts');
+  const postsSnapshot = await getDocs(query(postsCol, orderBy('createdAt', 'desc')));
+  return postsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 };
 
 export const getPost = async (id) => {
-  const response = await api.get(`/posts/${id}`);
-  return response.data;
+  const docRef = doc(db, 'posts', id);
+  const docSnap = await getDoc(docRef);
+  if (docSnap.exists()) {
+    return { id: docSnap.id, ...docSnap.data() };
+  } else {
+    throw new Error('Post not found');
+  }
 };
 
 export const createPost = async (postData) => {
-  const response = await api.post('/posts', postData);
-  return response.data;
+  const docRef = await addDoc(collection(db, 'posts'), {
+    ...postData,
+    createdAt: new Date()
+  });
+  return docRef.id;
 };
 
 export const updatePost = async (id, postData) => {
-  const response = await api.put(`/posts/${id}`, postData);
-  return response.data;
+  const docRef = doc(db, 'posts', id);
+  await updateDoc(docRef, postData);
 };
 
 export const deletePost = async (id) => {
-  const response = await api.delete(`/posts/${id}`);
-  return response.data;
+  const docRef = doc(db, 'posts', id);
+  await deleteDoc(docRef);
 };

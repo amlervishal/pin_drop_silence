@@ -1,7 +1,8 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { createPost } from '../services/api';
+import { useNavigate, Link } from 'react-router-dom';
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
@@ -12,22 +13,32 @@ const CreatePost = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const quillRef = useRef();
+  const auth = getAuth();
+  const db = getFirestore();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
+      const user = auth.currentUser;
+      if (!user) {
         setError('You must be logged in to create a post');
         return;
       }
-      await createPost({ title, content, imageUrl }, token);
-      navigate('/');
+      const docRef = await addDoc(collection(db, 'posts'), {
+        title,
+        content,
+        imageUrl,
+        authorId: user.uid,
+        createdAt: new Date()
+      });
+      navigate(`/post/${docRef.id}`);
     } catch (err) {
-      setError(err.response?.data?.message || 'An error occurred while creating the post');
+      setError('An error occurred while creating the post');
       console.error('Error creating post:', err);
     }
   };
+
+  // ... rest of the component remains the same
 
   const modules = {
     toolbar: [
@@ -46,13 +57,14 @@ const CreatePost = () => {
     'link', 'image'
   ];
 
+
   return (
     <div className="container mx-auto px-4">
-      <h1 className="text-3xl font-bold mb-4">Create New Post</h1>
+      <h1 className="text-3xl font-Primary font-semibold mb-4">Create New Post</h1>
       {error && <p className="text-red-500 mb-4">{error}</p>}
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label htmlFor="title" className="block mb-1">Title</label>
+      <form onSubmit={handleSubmit} className="space-y-4 py-2">
+      <div>
+          <label htmlFor="title" className="block font-Primary mb-1">Title</label>
           <input
             type="text"
             id="title"
@@ -63,7 +75,7 @@ const CreatePost = () => {
           />
         </div>
         <div>
-          <label htmlFor="imageUrl" className="block mb-1">Image URL</label>
+          <label htmlFor="imageUrl" className="block font-Primary mb-1">Image URL</label>
           <input
             type="url"
             id="imageUrl"
@@ -74,7 +86,7 @@ const CreatePost = () => {
           />
         </div>
         <div>
-          <label htmlFor="content" className="block mb-1">Content</label>
+          <label htmlFor="content" className="block font-Primary mb-1">Content</label>
           <ReactQuill 
             ref={quillRef}
             theme="snow"
@@ -86,11 +98,14 @@ const CreatePost = () => {
           />
         </div>
         <div className="pt-8">
-          <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
+          <button type="submit" className="text-rose-600 text-xs font-Primary  border-solid border rounded-full border-rose-600 hover:border-rose-500 tracking-widest hover:text-slate-600 md:text-base px-5 py-0">
             Create Post
           </button>
         </div>
       </form>
+      <Link to="/" className="text-slate-700 text-xs font-Primary  border-solid border rounded-full border-slate-600 hover:border-rose-500 tracking-widest hover:text-rose-500 md:text-base px-5 py-0">
+          Back to Home
+        </Link>
     </div>
   );
 };

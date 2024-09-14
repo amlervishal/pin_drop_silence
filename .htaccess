@@ -8,9 +8,9 @@ AddType text/javascript
 AddType application/javascript .mjs
 
 # Enable CORS (Cross-Origin Resource Sharing) if needed
-<IfModule mod_headers.c>
-    Header set Access-Control-Allow-Origin "*"
-</IfModule>
+# <IfModule mod_headers.c>
+#     Header set Access-Control-Allow-Origin "*"
+# </IfModule>
 
 # If you're using a front-end framework that requires URL rewriting (e.g., React Router), you might need:
 <IfModule mod_rewrite.c>

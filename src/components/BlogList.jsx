@@ -2,15 +2,28 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getPosts } from '../services/api';
+import Posts from './Posts';
 
 const BlogList = ({ user }) => {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const fetchedPosts = await getPosts();
-      setPosts(fetchedPosts);
+      try {
+        const data = await getPosts();
+        console.log('Fetched data:', data);
+        if (Array.isArray(data)) {
+          setPosts(data);
+        } else {
+          console.error('Received data is not an array:', data);
+          // Handle the error appropriately, maybe set an error state
+        }
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+        // Handle the error appropriately
+      }
     };
+  
     fetchPosts();
   }, []);
 

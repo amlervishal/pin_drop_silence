@@ -4,36 +4,42 @@ import { Link } from 'react-router-dom';
 import { getPosts } from '../services/api';
 import Posts from './Posts';
 
-// eslint-disable-next-line react/prop-types
+// Function to check if the user's email is allowed to create/edit posts
+const isAllowedToEdit = (userEmail) => {
+  const allowedEmails = ['amlervishal@gmail.com', 'dramritavohra@gmail.com']; // Replace with your specific Gmail addresses
+  return allowedEmails.includes(userEmail);
+};
+
 const Home = ({ user }) => {
   const [posts, setPosts] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const fetchedPosts = await getPosts();
         setPosts(fetchedPosts);
+        setLoading(false);
       } catch (err) {
-        setError('Failed to fetch posts');
         console.error('Error fetching posts:', err);
-      } finally {
-        setIsLoading(false);
+        setError('Failed to fetch posts. Please try again later.');
+        setLoading(false);
       }
     };
+
     fetchPosts();
   }, []);
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div className="text-red-500">{error}</div>;
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
 
   return (
     <div className="">
-      <h1 className="text-xl text-center mb-4 font-Logo">Blog Posts</h1>
-      {user && (
+      <h1 className="text-xl text-center drop-shadow mb-4 font-Logo">Blog Posts</h1>
+      {user && isAllowedToEdit(user.email) && (
         <div className="my-8 text-center">
-          <Link to="/create" className="bg-rose-600 text-white px-5 py-2 rounded-full">
+          <Link to="/create" className="bg-rose-600 text-white font-Primary text-sm px-5 py-2 rounded-full">
             Create New Post
           </Link>
         </div>
@@ -44,7 +50,3 @@ const Home = ({ user }) => {
 };
 
 export default Home;
-
-{/* <div
-  class="absolute inset-0 h-full w-full bg-white bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]"
-></div> */}

@@ -1,7 +1,8 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getPost, updatePost, deletePost } from '../services/api';
+import { getFirestore, doc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
@@ -14,14 +15,22 @@ const EditPost = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const quillRef = useRef();
+  const auth = getAuth();
+  const db = getFirestore();
 
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const post = await getPost(id);
-        setTitle(post.title);
-        setContent(post.content);
-        setImageUrl(post.imageUrl || '');
+        const docRef = doc(db, 'posts', id);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const postData = docSnap.data();
+          setTitle(postData.title);
+          setContent(postData.content);
+          setImageUrl(postData.imageUrl || '');
+        } else {
+          setError('Post not found');
+        }
       } catch (err) {
         setError('Failed to fetch post');
         console.error('Error fetching post:', err);
@@ -30,20 +39,26 @@ const EditPost = () => {
       }
     };
     fetchPost();
-  }, [id]);
+  }, [id, db]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
+      const user = auth.currentUser;
+      if (!user) {
         setError('You must be logged in to edit a post');
         return;
       }
-      await updatePost(id, { title, content, imageUrl }, token);
-      navigate('/');
+      const docRef = doc(db, 'posts', id);
+      await updateDoc(docRef, {
+        title,
+        content,
+        imageUrl,
+        updatedAt: new Date()
+      });
+      navigate(`/post/${id}`);
     } catch (err) {
-      setError(err.response?.data?.message || 'An error occurred while updating the post');
+      setError('An error occurred while updating the post');
       console.error('Error updating post:', err);
     }
   };
@@ -51,15 +66,15 @@ const EditPost = () => {
   const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete this post?')) {
       try {
-        const token = localStorage.getItem('token');
-        if (!token) {
+        const user = auth.currentUser;
+        if (!user) {
           setError('You must be logged in to delete a post');
           return;
         }
-        await deletePost(id, token);
+        await deleteDoc(doc(db, 'posts', id));
         navigate('/');
       } catch (err) {
-        setError(err.response?.data?.message || 'An error occurred while deleting the post');
+        setError('An error occurred while deleting the post');
         console.error('Error deleting post:', err);
       }
     }
@@ -90,9 +105,12 @@ const EditPost = () => {
     return <div className="text-red-500">{error}</div>;
   }
 
+  
+
   return (
     <div className="container mx-auto px-4">
       <h1 className="text-3xl font-Primary font-medium text-center mb-4">Edit Post</h1>
+      
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label htmlFor="title" className="block mb-1">Title</label>
@@ -150,6 +168,7 @@ const EditPost = () => {
           </button>
         </div>
       </form>
+
     </div>
   );
 };

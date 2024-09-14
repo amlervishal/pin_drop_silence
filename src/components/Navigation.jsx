@@ -1,31 +1,56 @@
-/* eslint-disable no-unused-vars */
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { getAuth, signOut, onAuthStateChanged } from 'firebase/auth';
 
-const Navigation = ({ user, onSignOut }) => {
+const Navigation = () => {
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+  const auth = getAuth();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, [auth]);
+
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+      navigate('/');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
+
   return (
-    <nav className="z-10 sticky top-0 flex flex-col items-center px-4 pt-8 pb-8 gap-3 bg-slate-100/75 shadow-sm backdrop-blur-md ">
-        <div className="">
-          <Link to="/" className="font-Logo text-2xl md:text-3xl p-4">Pin drop silence...</Link>
-        </div>
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className=" size-6"><path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14" />
-        </svg>
+    <nav className="z-10 sticky top-0 flex flex-col items-center px-4 pt-8 pb-8 gap-3 bg-white/60 shadow-lg backdrop-blur-sm bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
+      <div className="">
+        <Link to="/" className="font-Logo drop-shadow-md text-2xl md:text-3xl p-4">Pin drop silence</Link>
+      </div>
+      <div className='flex flex-row items-center gap-2'>
+        <h4 className='font-Primary tracking-widest font-extralight drop-shadow-md text-sm md:text-base'>Blogs by Dr.Amrita Vohra</h4>
 
-        <div className='flex flex-row items-center gap-2'>
-          <h4 className='font-Primary tracking-widest text-sm md:text-base'>Blogs by Dr.Amrita Vohra</h4>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="size-4">
-            <path fillRule="evenodd" d="M15 8A7 7 0 1 1 1 8a7 7 0 0 1 14 0ZM8 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2ZM5.5 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm6 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clipRule="evenodd" />
-          </svg>
+      </div>
+      <div className='flex flex-row justify-around gap-5 mt-3'>
+        <Link to="/about" className="font-Primary border-solid border rounded-full border-slate-600 hover:border-rose-500 tracking-widest hover:text-rose-500 text-sm md:text-base px-2 md:px-5 py-0">about</Link>
+      {user ? (
+        <>
+          <span className="mr-4 font-Primary text-center text-sm md:text-base">Welcome, {user.displayName || user.email}!</span>
+          {/* {user.email === 'amlervishal@gmail.com' && (
+            <Link to="/create" className="bg-green-600 text-white px-4 py-2 rounded-full mr-2">Create Post</Link>
+          )} */}
+          <button onClick={handleSignOut} className="font-Primary border-solid border rounded-full border-rose-600 hover:border-rose-500 tracking-widest text-rose-600  hover:text-cyan-500 text-sm md:text-base px-2 md:px-5 py-0">sign out</button>
+        </>
+      ) : (
+        <Link to="/signin" className="font-Primary border-solid border rounded-full border-slate-600 hover:border-rose-500 tracking-widest hover:text-rose-500 text-sm md:text-base px-2 md:px-5 py-0">sign in</Link>
+      ) 
+      }
 
-          <Link to="/about" className="font-Primary border-solid border rounded-full border-slate-600 hover:border-rose-500 tracking-widest hover:text-rose-500 text-sm md:text-base px-5 py-0">about</Link>
-        </div>
-          {user && (
-            <>
-              <span className="mr-4 font-Primary text-sm">Welcome, {user}!</span>
-              <button onClick={onSignOut} className="text-rose-600 hover:underline border border-rose-600 rounded-full text-sm px-5 py-1">Sign Out</button>
-            </>
-          )}
-      
+      </div>
+
     </nav>
   );
 };
