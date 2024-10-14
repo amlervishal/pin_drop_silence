@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
-import React from 'react';
-import { getAuth, signOut } from 'firebase/auth';
+import React from "react";
+import { getAuth, signOut } from "firebase/auth";
 import amritaImage from "../assets/amrita.png";
 
 const About = () => {
@@ -10,21 +10,50 @@ const About = () => {
 
   return (
     <div className="container flex flex-col items-center gap-8 mx-auto px-4">
-      <h1 className="text-center text-xl font-Logo font-bold">About Dr. Amrita Vohra</h1>
-      
-      <img 
-        className="max-w-80 rounded-xl object-cover drop-shadow-lg" 
-        src={amritaImage} 
-        alt="Dr. Amrita Vohra" 
+      <h1 className="text-center text-xl font-Logo font-bold">
+        About Dr. Amrita Vohra
+      </h1>
+
+      <img
+        className="max-w-80 rounded-xl object-cover drop-shadow-lg"
+        src={amritaImage}
+        alt="Dr. Amrita Vohra"
       />
-      
+
       <p className="px-5 md:px-20 lg:px-64 font-Primary text-sm mb-4">
-        Dr Amrita Vohra has been an eminent educationist for the past 23 years. She began her career as a Lecturer for English Literature at Navyug Girls Post Graduate College, Lucknow, where she established the Functional English Department.
+        With almost 30 years of transformative work in education, Dr Amrita
+        Vohra is a passionate educator, researcher, and author, currently
+        serving as COO & Director Education - GEMS Education, India.
+        <br /> <br />A PhD in English Literature, a certified Program Leader for
+        Cambridge Professional Development Qualifications for teachers and
+        school leaders, a certified IB Head of School and Cambridge TKT
+        qualified educator, Dr Amrita Vohra has been recognized as one of
+        India’s top 100 ‘Great People Managers’. Known for embedding ‘Cultures
+        of Thinking’ and enabling ‘growth mindsets’, she has led various schools
+        as Principal, served as Head of Professional Development and Quality
+        Assurance, and mentored a lot of greenfield as well as brownfield school
+        projects across India with National, Cambridge and IB (International
+        Baccalaureate) curricula. K-12 Policy, Professional Development, Quality
+        Assurance, Early Childhood Education, Teaching of English, Drama in
+        Education, Inclusive Education, Global Citizenship Education, Social
+        Emotional Learning alongside Mental Health and Wellbeing are some of her
+        key interests. She has been recognized by Education World among the top
+        25 education leaders re-inventing education in India, by Insight Success
+        magazine amongst the 5 most inspiring leaders in education and many
+        others. She is recognized as an expert on Teaching of English and
+        Reading Programs. She has been a part of and led various standard-
+        setting exercises, capacity building workshops, leadership development
+        and academic research initiatives by ACER (Australian Council for
+        Education Research), OUP (Oxford University Press), CBSE and others.
         <br /><br />
-        Thereafter, she joined Jaipuria Institute of Management and later Amity University as a Lecturer for English, Soft Skills and Business Communication training students from Mass Communication and Management programmes. She also worked for the English and Women's Studies Departments at IT College, Lucknow, where she taught Literature and Feminist Literary Criticism in Post Graduate courses.
-        <br /><br />
-        {/* ... rest of the biography ... */}
-        In her present profile as Head – Professional Development and Quality Assurance with GEMS Education, India, she is leading on Teacher Education and Quality Assurance. She has helped the organization set up new school projects, provided services to managed schools associated with GEMS, developed and re-organized the Policy manuals for GEMS India K-12 schools and provided continuous mentoring and support to School Leadership teams and most importantly teachers. Being a firm believer in Joint practice development and sharing of good practices, she has set up Professional Learning Communities of teachers in GEMS India both offline and online. She is also a certified Program Leader for Cambridge Professional Development Qualifications - PDQS, having designed one year Diploma programmes for in-service teachers and School Leaders. She has also conducted workshops for teachers in small town and village schools of Rajasthan, Uttar Pradesh as well as the DIET Principals in the Southern state of Kerala. During her tenure with GEMS, she has contributed as Acting Principal for GEMS schools at Gurgaon, Bhopal and Karnal to salvage crisis situations. She is a member of the GEMS Global Education team lead by Mr. Tony Little and is a regular contributor to the GEMS India blog.
+        From Workshops for DIET Principals in Kerala to affordable private
+        schools spread across urban, semi-urban as well as rural India, to
+        establishing and supporting mid-market national curriculum and premium
+        IB schools, she has been working relentlessly towards improving K- 12
+        education quality across the spectrum of public and private education.
+        Her personal blog www.pindropsilence.in is widely appreciated among
+        educators. A Bharatnatyam dancer and theatre professional, she is a
+        creative artist at heart.
       </p>
     </div>
   );

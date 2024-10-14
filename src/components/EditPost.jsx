@@ -5,6 +5,8 @@ import { getFirestore, doc, getDoc, updateDoc, deleteDoc } from 'firebase/firest
 import { getAuth } from 'firebase/auth';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { generateMetaDescription } from "../utils/metaUtils"
+
 
 const EditPost = () => {
   const [title, setTitle] = useState('');
@@ -54,7 +56,11 @@ const EditPost = () => {
         title,
         content,
         imageUrl,
-        updatedAt: new Date()
+        updatedAt: new Date(),
+        // Update meta information
+        metaTitle: title,
+        metaDescription: generateMetaDescription(content),
+        metaImage: imageUrl
       });
       navigate(`/post/${id}`);
     } catch (err) {

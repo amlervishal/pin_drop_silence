@@ -12,10 +12,12 @@ import CreatePost from './components/CreatePost';
 import EditPost from './components/EditPost';
 import SignIn from './components/SignIn';
 import Loader from './components/Loader';
+import { Helmet } from 'react-helmet';
+import defaultImage from './assets/default-image.png';
 
-// Your Firebase configuration
+// Firebase configuration
 const firebaseConfig = {
-  // ... your config here
+  // ... my config 
   apiKey: "AIzaSyDkLozmCnPQgugpyfL79_EEF5-CBS1Hl7E",
   authDomain: "pindropsilence-26bda.firebaseapp.com",
   projectId: "pindropsilence-26bda",
@@ -47,8 +49,17 @@ function App() {
   }
 
   return (
-    <Router basename="/pin_drop_silence">
+    <Router>
       <div className="flex flex-col min-h-screen bg-white bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
+        <Helmet>
+            <title>Pin Drop Silence...</title>
+            <meta name="description" content="Blogs by Dr. Amrita Vohra" />
+            <meta property="og:title" content="Pin Drop Silence..." />
+            <meta property="og:description" content="Blogs by Dr. Amrita Vohra" />
+            <meta property="og:image" content={defaultImage} />
+            <meta property="og:type" content="website" />
+            <meta property="og:url" content={window.location.origin} />
+        </Helmet>
         <Navigation user={user} />
         <main className="flex-grow container mx-auto px-4 py-8">
           <Routes>

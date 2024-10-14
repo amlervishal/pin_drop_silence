@@ -5,6 +5,7 @@ import { getFirestore, collection, addDoc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { generateMetaDescription } from "../utils/metaUtils"
 
 const CreatePost = () => {
   const [title, setTitle] = useState('');
@@ -29,7 +30,11 @@ const CreatePost = () => {
         content,
         imageUrl,
         authorId: user.uid,
-        createdAt: new Date()
+        createdAt: new Date(),
+        // Add meta information
+        metaTitle: title,
+        metaDescription: generateMetaDescription(content),
+        metaImage: imageUrl
       });
       navigate(`/post/${docRef.id}`);
     } catch (err) {
@@ -38,7 +43,28 @@ const CreatePost = () => {
     }
   };
 
-  // ... rest of the component remains the same
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const user = auth.currentUser;
+  //     if (!user) {
+  //       setError('You must be logged in to create a post');
+  //       return;
+  //     }
+  //     const docRef = await addDoc(collection(db, 'posts'), {
+  //       title,
+  //       content,
+  //       imageUrl,
+  //       authorId: user.uid,
+  //       createdAt: new Date()
+  //     });
+  //     navigate(`/post/${docRef.id}`);
+  //   } catch (err) {
+  //     setError('An error occurred while creating the post');
+  //     console.error('Error creating post:', err);
+  //   }
+  // };
+
 
   const modules = {
     toolbar: [
