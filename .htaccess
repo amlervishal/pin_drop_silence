@@ -1,11 +1,13 @@
-# Set the correct MIME type for JavaScript files
+# Set the correct MIME type for JavaScript files and modules
 AddType application/javascript .js
-
-# Set the correct MIME type for JSX
-AddType text/javascript
-
-# If you're using ECMAScript modules specifically, you might want to add:
 AddType application/javascript .mjs
+AddType text/javascript .jsx
+
+# Force correct MIME type for ES6 modules
+<IfModule mod_mime.c>
+    AddType application/javascript .js
+    AddType application/javascript .mjs
+</IfModule>
 
 # Enable CORS (Cross-Origin Resource Sharing) if needed
 # <IfModule mod_headers.c>
