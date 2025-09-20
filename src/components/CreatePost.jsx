@@ -43,28 +43,6 @@ const CreatePost = () => {
     }
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const user = auth.currentUser;
-  //     if (!user) {
-  //       setError('You must be logged in to create a post');
-  //       return;
-  //     }
-  //     const docRef = await addDoc(collection(db, 'posts'), {
-  //       title,
-  //       content,
-  //       imageUrl,
-  //       authorId: user.uid,
-  //       createdAt: new Date()
-  //     });
-  //     navigate(`/post/${docRef.id}`);
-  //   } catch (err) {
-  //     setError('An error occurred while creating the post');
-  //     console.error('Error creating post:', err);
-  //   }
-  // };
-
 
   const modules = {
     toolbar: [
