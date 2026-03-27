@@ -1,11 +1,27 @@
 @import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Playwrite+CU:wght@100..400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-html {
-  @apply text-gray-600;
-} 
+:root {
+  --color-cream: #F5F2ED;
+  --color-cream-dark: #E8E4DD;
+  --color-black: #1A1A1A;
+  --color-dark-gray: #2A2A2A;
+  --color-muted: #6B6B6B;
+  --color-border: #D4D0C8;
+}
 
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Jost', sans-serif;
+  color: var(--color-black);
+  background-color: var(--color-cream);
+}

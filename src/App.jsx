@@ -3,9 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { auth } from './firebase.js';
 import { onAuthStateChanged } from 'firebase/auth';
-import Navigation from './components/Navigation';
-import Footer from './components/Footer';
-import Home from './components/Home';
+import Navbar from './components/redesign/Navbar';
+import FooterNew from './components/redesign/FooterNew';
+import HomePage from './components/redesign/HomePage';
 import About from './components/About';
 import BlogPreview from './components/BlogPreview';
 import CreatePost from './components/CreatePost';
@@ -30,40 +30,43 @@ function App() {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="flex items-center justify-center h-screen bg-cream text-dark font-sans">Loading...</div>;
   }
 
   return (
     <HelmetProvider>
       <Router>
-        <div className="flex flex-col min-h-screen bg-white bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
-          <Helmet>
-              <title>Pin Drop Silence...</title>
-              <meta name="description" content="Blogs by Dr. Amrita Vohra" />
-              <meta property="og:title" content="Pin Drop Silence..." />
-              <meta property="og:description" content="Blogs by Dr. Amrita Vohra" />
-              <meta property="og:image" content={defaultImage} />
-              <meta property="og:type" content="website" />
-              <meta property="og:url" content={window.location.origin} />
-          </Helmet>
-          <Navigation user={user} />
-          <main className="flex-grow container mx-auto px-4 py-8">
-            <Routes>
-              <Route path="/" element={<Home user={user} />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/post/:id" element={<BlogPreview user={user} />} />
-              <Route path="/signin" element={user ? <Navigate to="/" replace /> : <SignIn />} />
-              <Route
-                path="/create"
-                element={user ? <CreatePost /> : <Navigate to="/signin" replace />}
-              />
-              <Route
-                path="/edit/:id"
-                element={user ? <EditPost /> : <Navigate to="/signin" replace />}
-              />
-            </Routes>
-          </main>
-          <Footer />
+        <div className="min-h-screen bg-cream">
+          {/* Fixed-width page container */}
+          <div className="max-w-[1400px] mx-auto bg-cream shadow-[0_0_60px_rgba(0,0,0,0.06)]">
+            <Helmet>
+                <title>Pin Drop Silence...</title>
+                <meta name="description" content="Blogs by Dr. Amrita Vohra" />
+                <meta property="og:title" content="Pin Drop Silence..." />
+                <meta property="og:description" content="Blogs by Dr. Amrita Vohra" />
+                <meta property="og:image" content={defaultImage} />
+                <meta property="og:type" content="website" />
+                <meta property="og:url" content={window.location.origin} />
+            </Helmet>
+            <Navbar />
+            <main>
+              <Routes>
+                <Route path="/" element={<HomePage user={user} />} />
+                <Route path="/about" element={<div className="px-8 md:px-16 py-16"><About /></div>} />
+                <Route path="/post/:id" element={<div className="px-8 md:px-16 py-16"><BlogPreview user={user} /></div>} />
+                <Route path="/signin" element={user ? <Navigate to="/" replace /> : <div className="px-8 md:px-16 py-16"><SignIn /></div>} />
+                <Route
+                  path="/create"
+                  element={user ? <div className="px-8 md:px-16 py-16"><CreatePost /></div> : <Navigate to="/signin" replace />}
+                />
+                <Route
+                  path="/edit/:id"
+                  element={user ? <div className="px-8 md:px-16 py-16"><EditPost /></div> : <Navigate to="/signin" replace />}
+                />
+              </Routes>
+            </main>
+            <FooterNew />
+          </div>
         </div>
       </Router>
     </HelmetProvider>
@@ -71,8 +74,3 @@ function App() {
 }
 
 export default App;
-
-
-
-
-
